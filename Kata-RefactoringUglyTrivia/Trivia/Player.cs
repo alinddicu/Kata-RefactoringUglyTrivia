@@ -3,16 +3,17 @@
     public class Player
     {
         private readonly string _name;
-        public int Place { get; private set; }
 
         private int _numberGoldCoins;
-        //private readonly int _purse = 0;
-        //private readonly bool _inPenaltyBox = false;
 
         public Player(string name)
         {
             _name = name;
         }
+
+        public bool InPenaltyBox { get; set; }
+
+        public int Place { get; private set; }
 
         public void Avance(int roll)
         {
@@ -24,12 +25,9 @@
             _numberGoldCoins++;
         }
 
-        public string GetLabelGoldCoin()
+        public string AnnounceHowManyGoldCoins()
         {
-            return _name
-                   + " now has "
-                   + _numberGoldCoins
-                   + " Gold Coins.";
+            return _name + " now has " + _numberGoldCoins + " Gold Coins.";
         }
 
         public bool DidIWin()

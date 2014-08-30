@@ -58,8 +58,6 @@ namespace UnitTestProject1
 
     public class GameRunner<T> : IGameRunner where T : IGame
     {
-
-
         public void Run(int randInitializer, Action<string> writeLine, params string[] joueurs)
         {
             var aGame = (T)Activator.CreateInstance(typeof(T), new[] { writeLine });

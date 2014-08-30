@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using UglyTrivia;
-
-namespace Trivia
+﻿namespace Trivia
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+
+    using UglyTrivia;
+
     public class GameRunner
     {
-
         private static bool notAWinner;
 
         public static void Main(String[] args)
@@ -20,7 +19,7 @@ namespace Trivia
             aGame.AddPlayer("Pat");
             aGame.AddPlayer("Sue");
 
-            Random rand = new Random();
+            var rand = new Random();
 
             do
             {
@@ -36,14 +35,8 @@ namespace Trivia
                     notAWinner = aGame.wasCorrectlyAnswered();
                 }
 
-
-
             } while (notAWinner);
-
         }
-
-
     }
-
 }
 
