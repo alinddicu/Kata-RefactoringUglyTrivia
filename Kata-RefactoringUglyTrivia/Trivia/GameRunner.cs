@@ -14,11 +14,11 @@ namespace Trivia
 
         public static void Main(String[] args)
         {
-            Game aGame = new Game();
+            Game aGame = new Game(o => {});
 
-            aGame.add("Chet");
-            aGame.add("Pat");
-            aGame.add("Sue");
+            aGame.AddPlayer("Chet");
+            aGame.AddPlayer("Pat");
+            aGame.AddPlayer("Sue");
 
             Random rand = new Random();
 
@@ -40,8 +40,8 @@ namespace Trivia
 
             } while (notAWinner);
 
-            Console.ReadLine();
         }
+
 
     }
 

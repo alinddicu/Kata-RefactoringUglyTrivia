@@ -2,192 +2,184 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OldUglyTrivia;
+using Trivia;
 
 namespace UglyTrivia
 {
-    public class Game
+    public class Game : IGame
     {
+        private readonly Action<string> _writeLine;
 
+        readonly List<Player> _players = new List<Player>();
+        
+        readonly bool[] _inPenaltyBox = new bool[6];
 
-        List<string> players = new List<string>();
+        private readonly LinkedList<Question> _popQuestions = new LinkedList<Question>();
+        private readonly LinkedList<Question> _scienceQuestions = new LinkedList<Question>();
+        private readonly LinkedList<Question> _sportsQuestions = new LinkedList<Question>();
+        private readonly LinkedList<Question> _rockQuestions = new LinkedList<Question>();
 
-        int[] places = new int[6];
-        int[] purses = new int[6];
+        int _currentPlayerIndex = 0;
+        bool _isGettingOutOfPenaltyBox;
+        private Player CurrentPlayer { get { return _players[_currentPlayerIndex]; } }
 
-        bool[] inPenaltyBox = new bool[6];
-
-        LinkedList<string> popQuestions = new LinkedList<string>();
-        LinkedList<string> scienceQuestions = new LinkedList<string>();
-        LinkedList<string> sportsQuestions = new LinkedList<string>();
-        LinkedList<string> rockQuestions = new LinkedList<string>();
-
-        int currentPlayer = 0;
-        bool isGettingOutOfPenaltyBox;
-
-        public Game()
+        public Game(Action<string> writeLine)
         {
-            for (int i = 0; i < 50; i++)
+            _writeLine = writeLine;
+            for (var i = 0; i < 50; i++)
             {
-                popQuestions.AddLast("Pop Question " + i);
-                scienceQuestions.AddLast(("Science Question " + i));
-                sportsQuestions.AddLast(("Sports Question " + i));
-                rockQuestions.AddLast(createRockQuestion(i));
+                _popQuestions.AddLast(new Question("Pop Question " + i));
+                _scienceQuestions.AddLast(new Question("Science Question " + i));
+                _sportsQuestions.AddLast(new Question("Sports Question " + i));
+                _rockQuestions.AddLast(new Question("Rock Question " + i));
             }
         }
 
-        public String createRockQuestion(int index)
+        public bool AddPlayer(String playerName)
         {
-            return "Rock Question " + index;
-        }
+            _players.Add(new Player(playerName));
+            _inPenaltyBox[howManyPlayers()] = false;
 
-        public bool isPlayable()
-        {
-            return (howManyPlayers() >= 2);
-        }
-
-        public bool add(String playerName)
-        {
-
-
-            players.Add(playerName);
-            places[howManyPlayers()] = 0;
-            purses[howManyPlayers()] = 0;
-            inPenaltyBox[howManyPlayers()] = false;
-
-            Console.WriteLine(playerName + " was added");
-            Console.WriteLine("They are player number " + players.Count);
+            WriteLine(playerName + " was added");
+            WriteLine("They are player number " + _players.Count);
             return true;
+        }
+
+        private void WriteLine(string message)
+        {
+            _writeLine(message);
         }
 
         public int howManyPlayers()
         {
-            return players.Count;
+            return _players.Count;
         }
 
         public void roll(int roll)
         {
-            Console.WriteLine(players[currentPlayer] + " is the current player");
-            Console.WriteLine("They have rolled a " + roll);
+            WriteLine(CurrentPlayer + " is the current player");
+            WriteLine("They have rolled a " + roll);
 
-            if (inPenaltyBox[currentPlayer])
+            if (_inPenaltyBox[_currentPlayerIndex])
             {
                 if (roll % 2 != 0)
                 {
-                    isGettingOutOfPenaltyBox = true;
+                    _isGettingOutOfPenaltyBox = true;
 
-                    Console.WriteLine(players[currentPlayer] + " is getting out of the penalty box");
-                    places[currentPlayer] = places[currentPlayer] + roll;
-                    if (places[currentPlayer] > 11) places[currentPlayer] = places[currentPlayer] - 12;
+                    WriteLine(CurrentPlayer + " is getting out of the penalty box");
+                    CurrentPlayer.Avance(roll);
 
-                    Console.WriteLine(players[currentPlayer]
+                    WriteLine(CurrentPlayer
                             + "'s new location is "
-                            + places[currentPlayer]);
-                    Console.WriteLine("The category is " + currentCategory());
+                            + CurrentPlayer.Place);
+                    WriteLine("The category is " + currentCategory());
                     askQuestion();
                 }
                 else
                 {
-                    Console.WriteLine(players[currentPlayer] + " is not getting out of the penalty box");
-                    isGettingOutOfPenaltyBox = false;
+                    WriteLine(CurrentPlayer + " is not getting out of the penalty box");
+                    _isGettingOutOfPenaltyBox = false;
                 }
 
             }
             else
             {
+                CurrentPlayer.Avance(roll);
 
-                places[currentPlayer] = places[currentPlayer] + roll;
-                if (places[currentPlayer] > 11) places[currentPlayer] = places[currentPlayer] - 12;
-
-                Console.WriteLine(players[currentPlayer]
+                WriteLine(CurrentPlayer
                         + "'s new location is "
-                        + places[currentPlayer]);
-                Console.WriteLine("The category is " + currentCategory());
+                        + CurrentPlayer.Place);
+                WriteLine("The category is " + currentCategory());
                 askQuestion();
             }
-
         }
 
         private void askQuestion()
         {
             if (currentCategory() == "Pop")
             {
-                Console.WriteLine(popQuestions.First());
-                popQuestions.RemoveFirst();
+                WriteLine(_popQuestions.First().ToString());
+                _popQuestions.RemoveFirst();
             }
+
             if (currentCategory() == "Science")
             {
-                Console.WriteLine(scienceQuestions.First());
-                scienceQuestions.RemoveFirst();
+                WriteLine(_scienceQuestions.First().ToString());
+                _scienceQuestions.RemoveFirst();
             }
+
             if (currentCategory() == "Sports")
             {
-                Console.WriteLine(sportsQuestions.First());
-                sportsQuestions.RemoveFirst();
+                WriteLine(_sportsQuestions.First().ToString());
+                _sportsQuestions.RemoveFirst();
             }
+
             if (currentCategory() == "Rock")
             {
-                Console.WriteLine(rockQuestions.First());
-                rockQuestions.RemoveFirst();
+                WriteLine(_rockQuestions.First().ToString());
+                _rockQuestions.RemoveFirst();
             }
         }
 
 
         private String currentCategory()
         {
-            if (places[currentPlayer] == 0) return "Pop";
-            if (places[currentPlayer] == 4) return "Pop";
-            if (places[currentPlayer] == 8) return "Pop";
-            if (places[currentPlayer] == 1) return "Science";
-            if (places[currentPlayer] == 5) return "Science";
-            if (places[currentPlayer] == 9) return "Science";
-            if (places[currentPlayer] == 2) return "Sports";
-            if (places[currentPlayer] == 6) return "Sports";
-            if (places[currentPlayer] == 10) return "Sports";
-            return "Rock";
+            var place = CurrentPlayer.Place;
+            switch (place)
+            {
+                case 0:
+                case 4:
+                case 8:
+                    return "Pop";
+
+                case 1:
+                case 5:
+                case 9:
+                    return "Science";
+
+                case 2:
+                case 6:
+                case 10:
+                    return "Sports";
+
+                default:
+                    return "Rock";
+            }
         }
 
         public bool wasCorrectlyAnswered()
         {
-            if (inPenaltyBox[currentPlayer])
+            if (_inPenaltyBox[_currentPlayerIndex])
             {
-                if (isGettingOutOfPenaltyBox)
+                if (_isGettingOutOfPenaltyBox)
                 {
-                    Console.WriteLine("Answer was correct!!!!");
-                    purses[currentPlayer]++;
-                    Console.WriteLine(players[currentPlayer]
-                            + " now has "
-                            + purses[currentPlayer]
-                            + " Gold Coins.");
+                    WriteLine("Answer was correct!!!!");
+                    CurrentPlayer.AddGoldCoin();
+                    WriteLine(CurrentPlayer.GetLabelGoldCoin());
 
-                    bool winner = didPlayerWin();
-                    currentPlayer++;
-                    if (currentPlayer == players.Count) currentPlayer = 0;
+                    bool winner = CurrentPlayer.DidIWin();
+                    _currentPlayerIndex++;
+                    if (_currentPlayerIndex == _players.Count) _currentPlayerIndex = 0;
 
                     return winner;
                 }
                 else
                 {
-                    currentPlayer++;
-                    if (currentPlayer == players.Count) currentPlayer = 0;
+                    _currentPlayerIndex++;
+                    if (_currentPlayerIndex == _players.Count) _currentPlayerIndex = 0;
                     return true;
                 }
-
-
-
             }
             else
             {
+                WriteLine("Answer was corrent!!!!");
+                CurrentPlayer.AddGoldCoin();
+                WriteLine(CurrentPlayer.GetLabelGoldCoin());
 
-                Console.WriteLine("Answer was corrent!!!!");
-                purses[currentPlayer]++;
-                Console.WriteLine(players[currentPlayer]
-                        + " now has "
-                        + purses[currentPlayer]
-                        + " Gold Coins.");
-
-                bool winner = didPlayerWin();
-                currentPlayer++;
-                if (currentPlayer == players.Count) currentPlayer = 0;
+                bool winner = CurrentPlayer.DidIWin();
+                _currentPlayerIndex++;
+                if (_currentPlayerIndex == _players.Count) _currentPlayerIndex = 0;
 
                 return winner;
             }
@@ -195,20 +187,13 @@ namespace UglyTrivia
 
         public bool wrongAnswer()
         {
-            Console.WriteLine("Question was incorrectly answered");
-            Console.WriteLine(players[currentPlayer] + " was sent to the penalty box");
-            inPenaltyBox[currentPlayer] = true;
+            WriteLine("Question was incorrectly answered");
+            WriteLine(CurrentPlayer + " was sent to the penalty box");
+            _inPenaltyBox[_currentPlayerIndex] = true;
 
-            currentPlayer++;
-            if (currentPlayer == players.Count) currentPlayer = 0;
+            _currentPlayerIndex++;
+            if (_currentPlayerIndex == _players.Count) _currentPlayerIndex = 0;
             return true;
         }
-
-
-        private bool didPlayerWin()
-        {
-            return !(purses[currentPlayer] == 6);
-        }
     }
-
 }
