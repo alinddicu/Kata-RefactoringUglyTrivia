@@ -6,17 +6,13 @@
     using System.Text;
     using OldUglyTrivia;
     using Trivia;
+    using Trivia.Question;
 
     public class Game : IGame
     {
         private readonly Action<string> _writeLine;
-
-        readonly List<Player> _players = new List<Player>();
-
-        private readonly LinkedList<Question> _popQuestions = new LinkedList<Question>();
-        private readonly LinkedList<Question> _scienceQuestions = new LinkedList<Question>();
-        private readonly LinkedList<Question> _sportsQuestions = new LinkedList<Question>();
-        private readonly LinkedList<Question> _rockQuestions = new LinkedList<Question>();
+        private readonly List<Player> _players = new List<Player>();        
+        private readonly QuestionStack _questionStack = new QuestionStack();
 
         int _currentPlayerIndex = 0;
         bool _isGettingOutOfPenaltyBox;
@@ -25,13 +21,6 @@
         public Game(Action<string> writeLine)
         {
             _writeLine = writeLine;
-            for (var i = 0; i < 50; i++)
-            {
-                _popQuestions.AddLast(new Question("Pop Question " + i));
-                _scienceQuestions.AddLast(new Question("Science Question " + i));
-                _sportsQuestions.AddLast(new Question("Sports Question " + i));
-                _rockQuestions.AddLast(new Question("Rock Question " + i));
-            }
         }
 
         public bool AddPlayer(String playerName)
@@ -90,55 +79,28 @@
 
         private void askQuestion()
         {
-            if (currentCategory() == "Pop")
-            {
-                WriteLine(_popQuestions.First().ToString());
-                _popQuestions.RemoveFirst();
-            }
-
-            if (currentCategory() == "Science")
-            {
-                WriteLine(_scienceQuestions.First().ToString());
-                _scienceQuestions.RemoveFirst();
-            }
-
-            if (currentCategory() == "Sports")
-            {
-                WriteLine(_sportsQuestions.First().ToString());
-                _sportsQuestions.RemoveFirst();
-            }
-
-            if (currentCategory() == "Rock")
-            {
-                WriteLine(_rockQuestions.First().ToString());
-                _rockQuestions.RemoveFirst();
-            }
+            _questionStack.Pop(currentCategory(), WriteLine);
         }
 
 
-        private String currentCategory()
+        private QuestionCategory currentCategory()
         {
-            var place = CurrentPlayer.Place;
-            switch (place)
+            if (CurrentPlayer.Place % 4 == 0)
             {
-                case 0:
-                case 4:
-                case 8:
-                    return "Pop";
-
-                case 1:
-                case 5:
-                case 9:
-                    return "Science";
-
-                case 2:
-                case 6:
-                case 10:
-                    return "Sports";
-
-                default:
-                    return "Rock";
+                return QuestionCategory.Pop;
             }
+
+            if (CurrentPlayer.Place % 4 == 1)
+            {
+                return QuestionCategory.Science;
+            }
+
+            if (CurrentPlayer.Place % 4 == 2)
+            {
+                return QuestionCategory.Sports;
+            }
+
+            return QuestionCategory.Rock;
         }
 
         public bool wasCorrectlyAnswered()
@@ -147,15 +109,7 @@
             {
                 if (_isGettingOutOfPenaltyBox)
                 {
-                    WriteLine("Answer was correct!!!!");
-                    CurrentPlayer.AddGoldCoin();
-                    WriteLine(CurrentPlayer.AnnounceHowManyGoldCoins());
-
-                    bool winner = CurrentPlayer.DidIWin();
-                    _currentPlayerIndex++;
-                    StartNewRound();
-
-                    return winner;
+                    return PlayRound("Answer was correct!!!!");
                 }
                 else
                 {
@@ -167,16 +121,21 @@
             }
             else
             {
-                WriteLine("Answer was corrent!!!!");
-                CurrentPlayer.AddGoldCoin();
-                WriteLine(CurrentPlayer.AnnounceHowManyGoldCoins());
-
-                bool winner = CurrentPlayer.DidIWin();
-                _currentPlayerIndex++;
-                StartNewRound();
-
-                return winner;
+                return PlayRound("Answer was corrent!!!!");
             }
+        }
+
+        private bool PlayRound(string startRoundMessage)
+        {
+            WriteLine(startRoundMessage);
+            CurrentPlayer.AddGoldCoin();
+            WriteLine(CurrentPlayer.AnnounceHowManyGoldCoins());
+
+            bool winner = CurrentPlayer.DidIWin();
+            _currentPlayerIndex++;
+            StartNewRound();
+
+            return winner;
         }
 
         public bool wrongAnswer()
