@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
 
-    public class CategorySelector : ICategorySelector
+    public class CategorySelector
     {
         public QuestionCategory Select(int playerPosition)
         {

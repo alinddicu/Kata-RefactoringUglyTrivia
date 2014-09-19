@@ -5,12 +5,14 @@
     using System.Linq;
     using OldUglyTrivia;
     using Trivia;
+    using Trivia.Staff;
     using Trivia.Question;
 
     public class Game : IGame
     {
         private readonly Action<string> _writeLine;
         private readonly GameAnnouncer _gameAnnouncer;
+        private readonly QuestionPresentor _questionPresentor;
 
         private readonly List<Player> _players = new List<Player>();        
         private readonly QuestionStack _questionStack = new QuestionStack();
@@ -23,6 +25,7 @@
         {
             _writeLine = writeLine;
             _gameAnnouncer = new GameAnnouncer(_writeLine);
+            _questionPresentor = new QuestionPresentor(_gameAnnouncer, _questionStack);
         }
 
         public bool AddPlayer(string playerName)
@@ -52,38 +55,19 @@
                     _isGettingOutOfPenaltyBox = true;
 
                     _gameAnnouncer.CurrentPlayerGetsOutOfPenaltyBox(CurrentPlayer, true);
-                    CurrentPlayer.Avance(roll);
 
-                    _gameAnnouncer.CurrentPlayerLocation(CurrentPlayer);
-                    _gameAnnouncer.CurrentCategory(GetCurrentCategory());
-                    AskNextQuestion();
+                    _questionPresentor.AskNextQuestion(CurrentPlayer, roll);
                 }
                 else
                 {
                     _gameAnnouncer.CurrentPlayerGetsOutOfPenaltyBox(CurrentPlayer, false);
                     _isGettingOutOfPenaltyBox = false;
                 }
-
             }
             else
             {
-                CurrentPlayer.Avance(roll);
-
-                _gameAnnouncer.CurrentPlayerLocation(CurrentPlayer);
-                _gameAnnouncer.CurrentCategory(GetCurrentCategory());
-                AskNextQuestion();
+                _questionPresentor.AskNextQuestion(CurrentPlayer, roll);
             }
-        }
-
-        private void AskNextQuestion()
-        {
-            _questionStack.Pop(GetCurrentCategory(), _writeLine);
-        }
-
-
-        private QuestionCategory GetCurrentCategory()
-        {
-            return new CategorySelector().Select(CurrentPlayer.Place);
         }
 
         public bool wasCorrectlyAnswered()

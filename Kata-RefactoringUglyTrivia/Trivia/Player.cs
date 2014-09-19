@@ -15,7 +15,7 @@
 
         public int Place { get; private set; }
 
-        public void Avance(int roll)
+        public void MoveForward(int roll)
         {
             Place = (Place + roll) % 12;
         }

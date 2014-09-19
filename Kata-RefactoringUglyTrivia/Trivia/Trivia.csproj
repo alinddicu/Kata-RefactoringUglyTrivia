@@ -62,7 +62,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GameAnnouncer.cs" />
+    <Compile Include="Staff\GameAnnouncer.cs" />
     <Compile Include="IGame.cs" />
     <Compile Include="OldGame.cs" />
     <Compile Include="Game.cs" />
@@ -74,6 +74,7 @@
     <Compile Include="Question\Question.cs" />
     <Compile Include="Question\QuestionCategory.cs" />
     <Compile Include="Question\QuestionStack.cs" />
+    <Compile Include="Staff\QuestionPresentor.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
