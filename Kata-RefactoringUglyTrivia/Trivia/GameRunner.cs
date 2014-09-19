@@ -23,7 +23,6 @@
 
             do
             {
-
                 aGame.roll(rand.Next(5) + 1);
 
                 if (rand.Next(9) == 7)

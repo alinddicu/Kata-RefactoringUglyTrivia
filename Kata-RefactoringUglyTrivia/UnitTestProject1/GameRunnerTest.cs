@@ -8,18 +8,17 @@
     using UglyTrivia;
     using Game = UglyTrivia.Game;
 
-
     [TestClass]
     public class GameRunnerTest
     {
         [TestMethod]
-        public void TestMethod1()
+        public void Test()
         {
             var oldRunner = new GameRunner<OldUglyTrivia.Game>();
             var runner = new GameRunner<UglyTrivia.Game>();
             var multiRunner = new MultiGame(oldRunner, runner);
 
-            var joueurs = new[] {"Chet", "Pat", "Sue"};
+            var joueurs = new[] { "Chet", "Pat", "Sue" };
 
             for (int i = 0; i < 1000; i++)
             {
@@ -62,7 +61,7 @@
     {
         public void Run(int randInitializer, Action<string> writeLine, params string[] joueurs)
         {
-            var aGame = (T)Activator.CreateInstance(typeof(T), new[] { writeLine });
+            var aGame = (T)Activator.CreateInstance(typeof(T), writeLine);
 
             foreach (var joueur in joueurs)
             {
@@ -74,7 +73,6 @@
             bool notAWinner;
             do
             {
-
                 aGame.roll(rand.Next(5) + 1);
 
                 if (rand.Next(9) == 7)
@@ -86,10 +84,7 @@
                     notAWinner = aGame.wasCorrectlyAnswered();
                 }
 
-
-
             } while (notAWinner);
-
         }
     }
 }

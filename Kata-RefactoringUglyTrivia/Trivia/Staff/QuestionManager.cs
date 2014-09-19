@@ -14,7 +14,7 @@
             _questionStack = questionStack;
         }
 
-        public void PresentNext(Player currentPlayer, int roll)
+        public void GetNextQuestion(Player currentPlayer, int roll)
         {
             currentPlayer.MoveForward(roll);
             _gameAnnouncer.CurrentPlayerLocation(currentPlayer);

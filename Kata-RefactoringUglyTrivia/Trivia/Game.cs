@@ -30,11 +30,6 @@
             return true;
         }
 
-        public int howManyPlayers()
-        {
-            return _gameMaster.CountPlayers();
-        }
-
         public void roll(int roll)
         {
             _gameAnnouncer.CurrentPlayer(_gameMaster.GetCurrentPlayer());
@@ -42,11 +37,11 @@
 
             if (_gameMaster.GetCurrentPlayer().InPenaltyBox)
             {
-                _gameMaster.ActOnRoll(roll);
+                _gameMaster.PlayOnRoll(roll);
             }
             else
             {
-                _questionManager.PresentNext(_gameMaster.GetCurrentPlayer(), roll);
+                _questionManager.GetNextQuestion(_gameMaster.GetCurrentPlayer(), roll);
             }
         }
 
@@ -54,7 +49,7 @@
         {
             if (_gameMaster.GetCurrentPlayer().InPenaltyBox)
             {
-                _gameMaster.ManagePlayerInPenaltyBox();
+                return _gameMaster.IsPlayerGettingOutOfPenaltyBox();
             }
             else
             {
@@ -64,12 +59,7 @@
 
         public bool wrongAnswer()
         {
-            _gameAnnouncer.WrongAnswer();
-            _gameAnnouncer.PlayerWasSentToPenaltyBox(_gameMaster.GetCurrentPlayer());
-            _gameMaster.GetCurrentPlayer().InPenaltyBox = true;
-
-            _gameMaster.SetNextPlayer();
-            _gameMaster.StartNewRound();
+            _gameMaster.ContinueOnWrongAnswer();
 
             return true;
         }

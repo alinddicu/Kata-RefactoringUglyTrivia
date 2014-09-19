@@ -30,31 +30,13 @@
             return _players[_currentPlayerIndex];
         }
 
-        private int CountPlayers()
-        {
-            return _players.Count;
-        }
-
-        public void SetNextPlayer()
-        {
-            _currentPlayerIndex++;
-        }
-
-        public void StartNewRound()
-        {
-            if (_currentPlayerIndex == _players.Count)
-            {
-                _currentPlayerIndex = 0;
-            }
-        }
-
-        public void ActOnRoll(int roll)
+        public void PlayOnRoll(int roll)
         {
             if (roll % 2 != 0)
             {
                 GetCurrentPlayer().IsGettingOutOfPenaltyBox = true;
                 _gameAnnouncer.CurrentPlayerGetsOutOfPenaltyBox(GetCurrentPlayer(), true);
-                _questionManager.PresentNext(GetCurrentPlayer(), roll);
+                _questionManager.GetNextQuestion(GetCurrentPlayer(), roll);
             }
             else
             {
@@ -76,11 +58,11 @@
             return winner;
         }
 
-        public bool ManagePlayerInPenaltyBox()
+        public bool IsPlayerGettingOutOfPenaltyBox()
         {
             if (GetCurrentPlayer().IsGettingOutOfPenaltyBox)
             {
-                return _gameMaster.DidPlayerWin("Answer was correct!!!!");
+                return DidPlayerWin("Answer was correct!!!!");
             }
             else
             {
@@ -88,6 +70,29 @@
                 StartNewRound();
 
                 return true;
+            }
+        }
+
+        public void ContinueOnWrongAnswer()
+        {
+            _gameAnnouncer.WrongAnswer();
+            _gameAnnouncer.PlayerWasSentToPenaltyBox(GetCurrentPlayer());
+            GetCurrentPlayer().InPenaltyBox = true;
+
+            SetNextPlayer();
+            StartNewRound();
+        }
+
+        private void SetNextPlayer()
+        {
+            _currentPlayerIndex++;
+        }
+
+        private void StartNewRound()
+        {
+            if (_currentPlayerIndex == _players.Count)
+            {
+                _currentPlayerIndex = 0;
             }
         }
     }
