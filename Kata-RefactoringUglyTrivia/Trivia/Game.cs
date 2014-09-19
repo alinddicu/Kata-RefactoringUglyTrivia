@@ -11,6 +11,8 @@
     public class Game : IGame
     {
         private readonly Action<string> _writeLine;
+        private readonly GameAnnouncer _gameAnnouncer;
+
         private readonly List<Player> _players = new List<Player>();        
         private readonly QuestionStack _questionStack = new QuestionStack();
 
@@ -21,14 +23,16 @@
         public Game(Action<string> writeLine)
         {
             _writeLine = writeLine;
+            _gameAnnouncer = new GameAnnouncer(_writeLine);
         }
 
-        public bool AddPlayer(String playerName)
+        public bool AddPlayer(string playerName)
         {
-            _players.Add(new Player(playerName));
+            var player = new Player(playerName);
+            _players.Add(player);
+            _gameAnnouncer.PlayerWasAdded(player);
+            _gameAnnouncer.PlayerPosition(_players.Count());
 
-            WriteLine(playerName + " was added");
-            WriteLine("They are player number " + _players.Count);
             return true;
         }
 
@@ -44,8 +48,8 @@
 
         public void roll(int roll)
         {
-            WriteLine(CurrentPlayer + " is the current player");
-            WriteLine("They have rolled a " + roll);
+            _gameAnnouncer.CurrentPlayer(CurrentPlayer);
+            _gameAnnouncer.CurrentRoll(roll);
 
             if (CurrentPlayer.InPenaltyBox)
             {
@@ -53,16 +57,16 @@
                 {
                     _isGettingOutOfPenaltyBox = true;
 
-                    WriteLine(CurrentPlayer + " is getting out of the penalty box");
+                    _gameAnnouncer.CurrentPlayerGetsOutOfPenaltyBox(CurrentPlayer, true);
                     CurrentPlayer.Avance(roll);
 
-                    WriteLine(CurrentPlayer + "'s new location is " + CurrentPlayer.Place);
-                    WriteLine("The category is " + currentCategory());
-                    askQuestion();
+                    _gameAnnouncer.CurrentPlayerLocation(CurrentPlayer);
+                    _gameAnnouncer.CurrentCategory(GetCurrentCategory());
+                    AskNextQuestion();
                 }
                 else
                 {
-                    WriteLine(CurrentPlayer + " is not getting out of the penalty box");
+                    _gameAnnouncer.CurrentPlayerGetsOutOfPenaltyBox(CurrentPlayer, false);
                     _isGettingOutOfPenaltyBox = false;
                 }
 
@@ -71,19 +75,19 @@
             {
                 CurrentPlayer.Avance(roll);
 
-                WriteLine(CurrentPlayer + "'s new location is " + CurrentPlayer.Place);
-                WriteLine("The category is " + currentCategory());
-                askQuestion();
+                _gameAnnouncer.CurrentPlayerLocation(CurrentPlayer);
+                _gameAnnouncer.CurrentCategory(GetCurrentCategory());
+                AskNextQuestion();
             }
         }
 
-        private void askQuestion()
+        private void AskNextQuestion()
         {
-            _questionStack.Pop(currentCategory(), WriteLine);
+            _questionStack.Pop(GetCurrentCategory(), WriteLine);
         }
 
 
-        private QuestionCategory currentCategory()
+        private QuestionCategory GetCurrentCategory()
         {
             if (CurrentPlayer.Place % 4 == 0)
             {
@@ -125,11 +129,11 @@
             }
         }
 
-        private bool PlayRound(string startRoundMessage)
+        private bool PlayRound(string correctAnswerMessage)
         {
-            WriteLine(startRoundMessage);
+            _gameAnnouncer.CorrectAnswer(correctAnswerMessage);
             CurrentPlayer.AddGoldCoin();
-            WriteLine(CurrentPlayer.AnnounceHowManyGoldCoins());
+            _gameAnnouncer.PlayerGoldCoins(CurrentPlayer);
 
             bool winner = CurrentPlayer.DidIWin();
             _currentPlayerIndex++;
@@ -140,8 +144,8 @@
 
         public bool wrongAnswer()
         {
-            WriteLine("Question was incorrectly answered");
-            WriteLine(CurrentPlayer + " was sent to the penalty box");
+            _gameAnnouncer.WrongAnswer();
+            _gameAnnouncer.PlayerWasSentToPenaltyBox(CurrentPlayer);
             CurrentPlayer.InPenaltyBox = true;
 
             _currentPlayerIndex++;

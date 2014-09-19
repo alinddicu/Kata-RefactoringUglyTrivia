@@ -25,9 +25,9 @@
             _numberGoldCoins++;
         }
 
-        public string AnnounceHowManyGoldCoins()
+        public int GetGoldCoins()
         {
-            return _name + " now has " + _numberGoldCoins + " Gold Coins.";
+            return _numberGoldCoins;
         }
 
         public bool DidIWin()
