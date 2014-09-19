@@ -8,9 +8,7 @@
     {
         private readonly Action<string> _writeLine;
 
-        private readonly QuestionStack _questionStack = new QuestionStack();
-
-        private readonly GameAnnouncer _gameAnnouncer;
+        private readonly Announcer _announcer;
         private readonly QuestionManager _questionManager;
         private readonly GameMaster _gameMaster;
         
@@ -18,9 +16,9 @@
         {
             _writeLine = writeLine;
 
-            _gameAnnouncer = new GameAnnouncer(_writeLine);
-            _questionManager = new QuestionManager(_gameAnnouncer, _questionStack);
-            _gameMaster = new GameMaster(_gameAnnouncer, _questionManager);
+            _announcer = new Announcer(_writeLine);
+            _questionManager = new QuestionManager(_announcer);
+            _gameMaster = new GameMaster(_announcer, _questionManager);
         }
 
         public bool AddPlayer(string playerName)
@@ -32,8 +30,8 @@
 
         public void roll(int roll)
         {
-            _gameAnnouncer.CurrentPlayer(_gameMaster.GetCurrentPlayer());
-            _gameAnnouncer.CurrentRoll(roll);
+            _announcer.CurrentPlayer(_gameMaster.GetCurrentPlayer());
+            _announcer.CurrentRoll(roll);
 
             if (_gameMaster.GetCurrentPlayer().InPenaltyBox)
             {

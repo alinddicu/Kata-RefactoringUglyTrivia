@@ -62,7 +62,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Actors\GameAnnouncer.cs" />
+    <Compile Include="Actors\Announcer.cs" />
     <Compile Include="IGame.cs" />
     <Compile Include="OldGame.cs" />
     <Compile Include="Game.cs" />

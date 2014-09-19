@@ -4,27 +4,26 @@
 
     public class QuestionManager
     {
-        private readonly GameAnnouncer _gameAnnouncer;
-        private readonly QuestionStack _questionStack;
+        private readonly Announcer _announcer;
+        private readonly QuestionStack _questionStack = new QuestionStack();
         private readonly CategorySelector _categorySelector = new CategorySelector();
 
-        public QuestionManager(GameAnnouncer gameAnnouncer, QuestionStack questionStack)
+        public QuestionManager(Announcer gameAnnouncer)
         {
-            _gameAnnouncer = gameAnnouncer;
-            _questionStack = questionStack;
+            _announcer = gameAnnouncer;
         }
 
         public void GetNextQuestion(Player currentPlayer, int roll)
         {
             currentPlayer.MoveForward(roll);
-            _gameAnnouncer.CurrentPlayerLocation(currentPlayer);
-            _gameAnnouncer.CurrentCategory(GetCurrentCategory(currentPlayer));
+            _announcer.CurrentPlayerLocation(currentPlayer);
+            _announcer.CurrentCategory(GetCurrentCategory(currentPlayer));
             NextQuestion(currentPlayer);
         }
 
         private void NextQuestion(Player currentPlayer)
         {
-            _questionStack.Pop(GetCurrentCategory(currentPlayer), _gameAnnouncer.Announce);
+            _questionStack.Pop(GetCurrentCategory(currentPlayer), _announcer.Announce);
         }
 
         private QuestionCategory GetCurrentCategory(Player currentPlayer)

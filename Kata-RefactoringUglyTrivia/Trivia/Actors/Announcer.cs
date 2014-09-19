@@ -3,9 +3,9 @@
     using System;
     using Trivia.Question;
 
-    public class GameAnnouncer
+    public class Announcer
     {
-        public GameAnnouncer(Action<string> announce)
+        public Announcer(Action<string> announce)
         {
             Announce = announce;
         }

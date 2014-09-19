@@ -4,16 +4,16 @@
 
     public class GameMaster
     {
-        private readonly GameAnnouncer _gameAnnouncer;
+        private readonly Announcer _announcer;
         private readonly QuestionManager _questionManager;
 
         private readonly List<Player> _players = new List<Player>();
 
         private int _currentPlayerIndex = 0;
 
-        public GameMaster(GameAnnouncer gameAnnouncer, QuestionManager questionPresentor)
+        public GameMaster(Announcer announcer, QuestionManager questionPresentor)
         {
-            _gameAnnouncer = gameAnnouncer;
+            _announcer = announcer;
             _questionManager = questionPresentor;
         }
 
@@ -21,8 +21,8 @@
         {
             var player = new Player(playerName);
             _players.Add(player);
-            _gameAnnouncer.PlayerWasAdded(player);
-            _gameAnnouncer.PlayerPosition(_players.Count);
+            _announcer.PlayerWasAdded(player);
+            _announcer.PlayerPosition(_players.Count);
         }
 
         public Player GetCurrentPlayer()
@@ -35,21 +35,21 @@
             if (roll % 2 != 0)
             {
                 GetCurrentPlayer().IsGettingOutOfPenaltyBox = true;
-                _gameAnnouncer.CurrentPlayerGetsOutOfPenaltyBox(GetCurrentPlayer(), true);
+                _announcer.CurrentPlayerGetsOutOfPenaltyBox(GetCurrentPlayer(), true);
                 _questionManager.GetNextQuestion(GetCurrentPlayer(), roll);
             }
             else
             {
-                _gameAnnouncer.CurrentPlayerGetsOutOfPenaltyBox(GetCurrentPlayer(), false);
+                _announcer.CurrentPlayerGetsOutOfPenaltyBox(GetCurrentPlayer(), false);
                 GetCurrentPlayer().IsGettingOutOfPenaltyBox = false;
             }
         }
 
         public bool DidPlayerWin(string correctAnswerMessage)
         {
-            _gameAnnouncer.CorrectAnswer(correctAnswerMessage);
+            _announcer.CorrectAnswer(correctAnswerMessage);
             GetCurrentPlayer().AddGoldCoin();
-            _gameAnnouncer.PlayerGoldCoins(GetCurrentPlayer());
+            _announcer.PlayerGoldCoins(GetCurrentPlayer());
 
             bool winner = GetCurrentPlayer().DidIWin();
             SetNextPlayer();
@@ -75,8 +75,8 @@
 
         public void ContinueOnWrongAnswer()
         {
-            _gameAnnouncer.WrongAnswer();
-            _gameAnnouncer.PlayerWasSentToPenaltyBox(GetCurrentPlayer());
+            _announcer.WrongAnswer();
+            _announcer.PlayerWasSentToPenaltyBox(GetCurrentPlayer());
             GetCurrentPlayer().InPenaltyBox = true;
 
             SetNextPlayer();
