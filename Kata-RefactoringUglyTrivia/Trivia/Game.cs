@@ -11,15 +11,17 @@
     public class Game : IGame
     {
         private readonly Action<string> _writeLine;
+
+        private readonly QuestionStack _questionStack = new QuestionStack();
+
         private readonly GameAnnouncer _gameAnnouncer;
         private readonly QuestionPresentor _questionPresentor;
         private readonly GameMaster _gameMaster;
-
-        private readonly QuestionStack _questionStack = new QuestionStack();
         
         public Game(Action<string> writeLine)
         {
             _writeLine = writeLine;
+
             _gameAnnouncer = new GameAnnouncer(_writeLine);
             _questionPresentor = new QuestionPresentor(_gameAnnouncer, _questionStack);
             _gameMaster = new GameMaster(_gameAnnouncer);
@@ -68,7 +70,7 @@
             {
                 if (_gameMaster.GetCurrentPlayer().IsGettingOutOfPenaltyBox)
                 {
-                    return PlayRound("Answer was correct!!!!");
+                    return DidPlayerWin("Answer was correct!!!!");
                 }
                 else
                 {
@@ -80,11 +82,11 @@
             }
             else
             {
-                return PlayRound("Answer was corrent!!!!");
+                return DidPlayerWin("Answer was corrent!!!!");
             }
         }
 
-        private bool PlayRound(string correctAnswerMessage)
+        private bool DidPlayerWin(string correctAnswerMessage)
         {
             _gameAnnouncer.CorrectAnswer(correctAnswerMessage);
             _gameMaster.GetCurrentPlayer().AddGoldCoin();
