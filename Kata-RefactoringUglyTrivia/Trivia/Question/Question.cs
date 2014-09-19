@@ -1,20 +1,16 @@
 ﻿namespace Trivia.Question
 {
-    public class Question : IQuestion
+    public class Question
     {
         private readonly string _contenu;
-        private readonly QuestionCategory _category;
 
         public Question(string contenu, QuestionCategory category)
         {
             _contenu = contenu;
-            _category = category;
+            Category = category;
         }
 
-        public bool IsFromCategory(QuestionCategory category)
-        {
-            return _category == category;
-        }
+        public QuestionCategory Category { get; private set; }
 
         public override string ToString()
         {

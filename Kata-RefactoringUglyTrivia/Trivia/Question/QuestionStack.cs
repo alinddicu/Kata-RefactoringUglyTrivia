@@ -6,7 +6,7 @@
 
     public class QuestionStack
     {
-        private readonly List<IQuestion> _questions = new List<IQuestion>();
+        private readonly List<Question> _questions = new List<Question>();
 
         public QuestionStack()
         {
@@ -21,7 +21,7 @@
 
         public Question Pop(QuestionCategory category)
         {
-            var question = _questions.First(q => q.IsFromCategory(category));
+            var question = _questions.First(q => q.Category == category);
             _questions.Remove(question);
             return (Question)question;
         }
