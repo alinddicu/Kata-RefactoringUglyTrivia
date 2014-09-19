@@ -11,10 +11,10 @@
 
         private int _currentPlayerIndex = 0;
 
-        public GameMaster(Announcer announcer, QuestionManager questionPresentor)
+        public GameMaster(Announcer announcer, QuestionManager questionManager)
         {
             _announcer = announcer;
-            _questionManager = questionPresentor;
+            _questionManager = questionManager;
         }
 
         public void AddPlayer(string playerName)
