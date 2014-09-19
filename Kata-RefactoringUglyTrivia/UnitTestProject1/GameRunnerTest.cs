@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NFluent;
-using OldUglyTrivia;
-using Game = UglyTrivia.Game;
-
-namespace UnitTestProject1
+﻿namespace UnitTestProject1
 {
+    using System;
+    using System.Collections.Generic;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NFluent;
+    using OldUglyTrivia;
+    using UglyTrivia;
+    using Game = UglyTrivia.Game;
+
+
     [TestClass]
     public class GameRunnerTest
     {

@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace OldUglyTrivia
+﻿namespace OldUglyTrivia
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using UglyTrivia;
+
     public class Game : IGame
     {
         private readonly Action<string> _writeLine;

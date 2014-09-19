@@ -1,12 +1,8 @@
 ﻿namespace UglyTrivia
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using OldUglyTrivia;
-    using Trivia;
-    using Trivia.Staff;
     using Trivia.Question;
+    using Trivia.Staff;
 
     public class Game : IGame
     {
@@ -24,7 +20,7 @@
 
             _gameAnnouncer = new GameAnnouncer(_writeLine);
             _questionPresentor = new QuestionPresentor(_gameAnnouncer, _questionStack);
-            _gameMaster = new GameMaster(_gameAnnouncer);
+            _gameMaster = new GameMaster(_gameAnnouncer, _questionPresentor);
         }
 
         public bool AddPlayer(string playerName)
@@ -46,17 +42,7 @@
 
             if (_gameMaster.GetCurrentPlayer().InPenaltyBox)
             {
-                if (roll % 2 != 0)
-                {
-                    _gameMaster.GetCurrentPlayer().IsGettingOutOfPenaltyBox = true;
-                    _gameAnnouncer.CurrentPlayerGetsOutOfPenaltyBox(_gameMaster.GetCurrentPlayer(), true);
-                    _questionPresentor.AskNextQuestion(_gameMaster.GetCurrentPlayer(), roll);
-                }
-                else
-                {
-                    _gameAnnouncer.CurrentPlayerGetsOutOfPenaltyBox(_gameMaster.GetCurrentPlayer(), false);
-                    _gameMaster.GetCurrentPlayer().IsGettingOutOfPenaltyBox = false;
-                }
+                _gameMaster.ActOnRoll(roll);
             }
             else
             {
@@ -68,35 +54,12 @@
         {
             if (_gameMaster.GetCurrentPlayer().InPenaltyBox)
             {
-                if (_gameMaster.GetCurrentPlayer().IsGettingOutOfPenaltyBox)
-                {
-                    return DidPlayerWin("Answer was correct!!!!");
-                }
-                else
-                {
-                    _gameMaster.SetNextPlayer();
-                    _gameMaster.StartNewRound();
-
-                    return true;
-                }
+                _gameMaster.ManagePlayerInPenaltyBox();
             }
             else
             {
-                return DidPlayerWin("Answer was corrent!!!!");
+                return _gameMaster.DidPlayerWin("Answer was corrent!!!!");
             }
-        }
-
-        private bool DidPlayerWin(string correctAnswerMessage)
-        {
-            _gameAnnouncer.CorrectAnswer(correctAnswerMessage);
-            _gameMaster.GetCurrentPlayer().AddGoldCoin();
-            _gameAnnouncer.PlayerGoldCoins(_gameMaster.GetCurrentPlayer());
-
-            bool winner = _gameMaster.GetCurrentPlayer().DidIWin();
-            _gameMaster.SetNextPlayer();
-            _gameMaster.StartNewRound();
-
-            return winner;
         }
 
         public bool wrongAnswer()
