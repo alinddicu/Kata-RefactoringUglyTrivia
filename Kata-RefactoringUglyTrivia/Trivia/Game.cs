@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using OldUglyTrivia;
     using Trivia;
     using Trivia.Question;
@@ -34,11 +33,6 @@
             _gameAnnouncer.PlayerPosition(_players.Count());
 
             return true;
-        }
-
-        private void WriteLine(string message)
-        {
-            _writeLine(message);
         }
 
         public int howManyPlayers()
@@ -83,28 +77,13 @@
 
         private void AskNextQuestion()
         {
-            _questionStack.Pop(GetCurrentCategory(), WriteLine);
+            _questionStack.Pop(GetCurrentCategory(), _writeLine);
         }
 
 
         private QuestionCategory GetCurrentCategory()
         {
-            if (CurrentPlayer.Place % 4 == 0)
-            {
-                return QuestionCategory.Pop;
-            }
-
-            if (CurrentPlayer.Place % 4 == 1)
-            {
-                return QuestionCategory.Science;
-            }
-
-            if (CurrentPlayer.Place % 4 == 2)
-            {
-                return QuestionCategory.Sports;
-            }
-
-            return QuestionCategory.Rock;
+            return new CategorySelector().Select(CurrentPlayer.Place);
         }
 
         public bool wasCorrectlyAnswered()

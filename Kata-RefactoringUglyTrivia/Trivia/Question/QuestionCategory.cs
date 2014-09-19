@@ -2,9 +2,9 @@
 {
     public enum QuestionCategory
     {
-        Pop, 
-        Science, 
-        Rock, 
-        Sports
+        Pop = 0, 
+        Science = 1, 
+        Sports = 2,
+        Rock = 3 
     }
 }

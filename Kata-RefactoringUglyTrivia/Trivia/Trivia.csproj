@@ -69,6 +69,7 @@
     <Compile Include="GameRunner.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Question\CategorySelector.cs" />
     <Compile Include="Question\IQuestion.cs" />
     <Compile Include="Question\Question.cs" />
     <Compile Include="Question\QuestionCategory.cs" />
