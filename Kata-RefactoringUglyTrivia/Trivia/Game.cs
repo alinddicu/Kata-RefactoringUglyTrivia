@@ -14,11 +14,10 @@
         private readonly GameAnnouncer _gameAnnouncer;
         private readonly QuestionPresentor _questionPresentor;
 
-        private readonly List<Player> _players = new List<Player>();        
+        private readonly List<Player> _players = new List<Player>();
         private readonly QuestionStack _questionStack = new QuestionStack();
 
         int _currentPlayerIndex = 0;
-        bool _isGettingOutOfPenaltyBox;
         private Player CurrentPlayer { get { return _players[_currentPlayerIndex]; } }
 
         public Game(Action<string> writeLine)
@@ -52,7 +51,7 @@
             {
                 if (roll % 2 != 0)
                 {
-                    _isGettingOutOfPenaltyBox = true;
+                    CurrentPlayer.IsGettingOutOfPenaltyBox = true;
 
                     _gameAnnouncer.CurrentPlayerGetsOutOfPenaltyBox(CurrentPlayer, true);
 
@@ -61,7 +60,7 @@
                 else
                 {
                     _gameAnnouncer.CurrentPlayerGetsOutOfPenaltyBox(CurrentPlayer, false);
-                    _isGettingOutOfPenaltyBox = false;
+                    CurrentPlayer.IsGettingOutOfPenaltyBox = false;
                 }
             }
             else
@@ -74,7 +73,7 @@
         {
             if (CurrentPlayer.InPenaltyBox)
             {
-                if (_isGettingOutOfPenaltyBox)
+                if (CurrentPlayer.IsGettingOutOfPenaltyBox)
                 {
                     return PlayRound("Answer was correct!!!!");
                 }

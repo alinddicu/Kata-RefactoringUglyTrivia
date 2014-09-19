@@ -15,6 +15,8 @@
 
         public int Place { get; private set; }
 
+        public bool IsGettingOutOfPenaltyBox { get; set; }
+
         public void MoveForward(int roll)
         {
             Place = (Place + roll) % 12;
