@@ -23,7 +23,7 @@
 
         private void NextQuestion(Player currentPlayer)
         {
-            _questionStack.Pop(GetCurrentCategory(currentPlayer), _announcer.Announce);
+            _announcer.Announce(_questionStack.Pop(GetCurrentCategory(currentPlayer)).ToString());
         }
 
         private QuestionCategory GetCurrentCategory(Player currentPlayer)

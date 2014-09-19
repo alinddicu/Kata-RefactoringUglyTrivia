@@ -19,11 +19,11 @@
             }
         }
 
-        public void Pop(QuestionCategory category, Action<string> announcer)
+        public Question Pop(QuestionCategory category)
         {
             var question = _questions.First(q => q.IsFromCategory(category));
             _questions.Remove(question);
-            announcer(question.ToString());
+            return (Question)question;
         }
     }
 }
