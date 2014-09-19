@@ -1,4 +1,4 @@
-﻿namespace Trivia
+﻿namespace Trivia.Actors
 {
     public class Player
     {

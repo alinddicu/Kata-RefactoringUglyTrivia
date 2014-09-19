@@ -1,8 +1,8 @@
 ﻿namespace UglyTrivia
 {
     using System;
+    using Trivia.Actors;
     using Trivia.Question;
-    using Trivia.Staff;
 
     public class Game : IGame
     {

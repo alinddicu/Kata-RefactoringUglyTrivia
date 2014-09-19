@@ -2,6 +2,6 @@
 {
     public interface IQuestion
     {
-        bool CanBeAsked(QuestionCategory category);
+        bool IsFromCategory(QuestionCategory category);
     }
 }

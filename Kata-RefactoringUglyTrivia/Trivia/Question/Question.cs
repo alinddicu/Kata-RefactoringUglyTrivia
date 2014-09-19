@@ -11,7 +11,7 @@
             _category = category;
         }
 
-        public bool CanBeAsked(QuestionCategory category)
+        public bool IsFromCategory(QuestionCategory category)
         {
             return _category == category;
         }

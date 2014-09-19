@@ -1,4 +1,4 @@
-﻿namespace Trivia.Staff
+﻿namespace Trivia.Actors
 {
     using System.Collections.Generic;
 
