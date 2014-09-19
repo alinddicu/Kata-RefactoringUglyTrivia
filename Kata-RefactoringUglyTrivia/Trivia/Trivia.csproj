@@ -75,7 +75,7 @@
     <Compile Include="Question\QuestionCategory.cs" />
     <Compile Include="Question\QuestionStack.cs" />
     <Compile Include="Staff\GameMaster.cs" />
-    <Compile Include="Staff\QuestionPresentor.cs" />
+    <Compile Include="Staff\QuestionManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">

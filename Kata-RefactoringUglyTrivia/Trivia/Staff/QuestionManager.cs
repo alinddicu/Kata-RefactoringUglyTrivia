@@ -2,19 +2,19 @@
 {
     using Trivia.Question;
 
-    public class QuestionPresentor
+    public class QuestionManager
     {
         private readonly GameAnnouncer _gameAnnouncer;
         private readonly QuestionStack _questionStack;
         private readonly CategorySelector _categorySelector = new CategorySelector();
 
-        public QuestionPresentor(GameAnnouncer gameAnnouncer, QuestionStack questionStack)
+        public QuestionManager(GameAnnouncer gameAnnouncer, QuestionStack questionStack)
         {
             _gameAnnouncer = gameAnnouncer;
             _questionStack = questionStack;
         }
 
-        public void AskNextQuestion(Player currentPlayer, int roll)
+        public void PresentNext(Player currentPlayer, int roll)
         {
             currentPlayer.MoveForward(roll);
             _gameAnnouncer.CurrentPlayerLocation(currentPlayer);

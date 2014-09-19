@@ -5,16 +5,16 @@
     public class GameMaster
     {
         private readonly GameAnnouncer _gameAnnouncer;
-        private readonly QuestionPresentor _questionPresentor;
+        private readonly QuestionManager _questionManager;
 
         private readonly List<Player> _players = new List<Player>();
 
         private int _currentPlayerIndex = 0;
 
-        public GameMaster(GameAnnouncer gameAnnouncer, QuestionPresentor questionPresentor)
+        public GameMaster(GameAnnouncer gameAnnouncer, QuestionManager questionPresentor)
         {
             _gameAnnouncer = gameAnnouncer;
-            _questionPresentor = questionPresentor;
+            _questionManager = questionPresentor;
         }
 
         public void AddPlayer(string playerName)
@@ -54,7 +54,7 @@
             {
                 GetCurrentPlayer().IsGettingOutOfPenaltyBox = true;
                 _gameAnnouncer.CurrentPlayerGetsOutOfPenaltyBox(GetCurrentPlayer(), true);
-                _questionPresentor.AskNextQuestion(GetCurrentPlayer(), roll);
+                _questionManager.PresentNext(GetCurrentPlayer(), roll);
             }
             else
             {

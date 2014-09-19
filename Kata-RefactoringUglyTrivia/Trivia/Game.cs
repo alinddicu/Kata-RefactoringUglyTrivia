@@ -11,7 +11,7 @@
         private readonly QuestionStack _questionStack = new QuestionStack();
 
         private readonly GameAnnouncer _gameAnnouncer;
-        private readonly QuestionPresentor _questionPresentor;
+        private readonly QuestionManager _questionManager;
         private readonly GameMaster _gameMaster;
         
         public Game(Action<string> writeLine)
@@ -19,8 +19,8 @@
             _writeLine = writeLine;
 
             _gameAnnouncer = new GameAnnouncer(_writeLine);
-            _questionPresentor = new QuestionPresentor(_gameAnnouncer, _questionStack);
-            _gameMaster = new GameMaster(_gameAnnouncer, _questionPresentor);
+            _questionManager = new QuestionManager(_gameAnnouncer, _questionStack);
+            _gameMaster = new GameMaster(_gameAnnouncer, _questionManager);
         }
 
         public bool AddPlayer(string playerName)
@@ -46,7 +46,7 @@
             }
             else
             {
-                _questionPresentor.AskNextQuestion(_gameMaster.GetCurrentPlayer(), roll);
+                _questionManager.PresentNext(_gameMaster.GetCurrentPlayer(), roll);
             }
         }
 
