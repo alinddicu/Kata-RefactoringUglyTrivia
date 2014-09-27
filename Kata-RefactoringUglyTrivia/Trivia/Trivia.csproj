@@ -75,7 +75,7 @@
     <Compile Include="Question\QuestionCategory.cs" />
     <Compile Include="Question\QuestionDeck.cs" />
     <Compile Include="Actors\GameMaster.cs" />
-    <Compile Include="Actors\QuestionManager.cs" />
+    <Compile Include="Actors\QuestionMaster.cs" />
     <Compile Include="Question\QuestionStack.cs" />
   </ItemGroup>
   <ItemGroup>
