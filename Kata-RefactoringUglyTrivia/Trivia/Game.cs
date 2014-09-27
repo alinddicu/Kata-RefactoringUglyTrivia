@@ -1,6 +1,7 @@
 ﻿namespace UglyTrivia
 {
     using System;
+    using Trivia;
     using Trivia.Actors;
     using Trivia.Question;
 
@@ -11,7 +12,8 @@
         private readonly Announcer _announcer;
         private readonly QuestionMaster _questionMaster;
         private readonly GameMaster _gameMaster;
-        
+        private Turn _turn;
+
         public Game(Action<string> writeLine)
         {
             _writeLine = writeLine;
@@ -30,29 +32,13 @@
 
         public void roll(int roll)
         {
-            _announcer.CurrentPlayer(_gameMaster.GetCurrentPlayer());
-            _announcer.CurrentRoll(roll);
-
-            if (_gameMaster.GetCurrentPlayer().InPenaltyBox)
-            {
-                _gameMaster.PlayOnRoll(roll);
-            }
-            else
-            {
-                _questionMaster.GetNextQuestion(_announcer, _gameMaster.GetCurrentPlayer(), roll);
-            }
+            _turn = new Turn(_gameMaster);
+            _turn.Play(roll);
         }
 
         public bool wasCorrectlyAnswered()
         {
-            if (_gameMaster.GetCurrentPlayer().InPenaltyBox)
-            {
-                return _gameMaster.IsPlayerGettingOutOfPenaltyBox();
-            }
-            else
-            {
-                return _gameMaster.DidPlayerWin("Answer was corrent!!!!");
-            }
+            return _gameMaster.ContinueOnCorrectAnswer();
         }
 
         public bool wrongAnswer()

@@ -77,6 +77,7 @@
     <Compile Include="Actors\GameMaster.cs" />
     <Compile Include="Actors\QuestionMaster.cs" />
     <Compile Include="Question\QuestionStack.cs" />
+    <Compile Include="Turn.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
