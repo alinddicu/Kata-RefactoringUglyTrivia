@@ -10,12 +10,12 @@
         public GameMaster(Announcer announcer, QuestionMaster questionManager)
         {
             Announcer = announcer;
-            QuestionManager = questionManager;
+            QuestionMaster = questionManager;
         }
 
         public Announcer Announcer { get; private set; }
 
-        public QuestionMaster QuestionManager { get; private set; }
+        public QuestionMaster QuestionMaster { get; private set; }
 
         public void AddPlayer(string playerName)
         {
@@ -25,51 +25,15 @@
             Announcer.PlayerPosition(_players.Count);
         }
 
-        public Player GetCurrentPlayer()
+        public bool ContinueOnCorrectAnswer()
         {
-            return _players[_currentPlayerIndex];
-        }
-
-        public void PlayOnRoll(int roll)
-        {
-            if (roll % 2 != 0)
+            if (GetCurrentPlayer().InPenaltyBox)
             {
-                GetCurrentPlayer().IsGettingOutOfPenaltyBox = true;
-                Announcer.CurrentPlayerGetsOutOfPenaltyBox(GetCurrentPlayer(), true);
-                QuestionManager.GetNextQuestion(Announcer, GetCurrentPlayer(), roll);
+                return IsPlayerGettingOutOfPenaltyBox();
             }
             else
             {
-                Announcer.CurrentPlayerGetsOutOfPenaltyBox(GetCurrentPlayer(), false);
-                GetCurrentPlayer().IsGettingOutOfPenaltyBox = false;
-            }
-        }
-
-        public bool DidPlayerWin(string correctAnswerMessage)
-        {
-            Announcer.CorrectAnswer(correctAnswerMessage);
-            GetCurrentPlayer().AddGoldCoin();
-            Announcer.PlayerGoldCoins(GetCurrentPlayer());
-
-            bool winner = GetCurrentPlayer().DidIWin();
-            SetNextPlayer();
-            StartNewRound();
-
-            return winner;
-        }
-
-        public bool IsPlayerGettingOutOfPenaltyBox()
-        {
-            if (GetCurrentPlayer().IsGettingOutOfPenaltyBox)
-            {
-                return DidPlayerWin("Answer was correct!!!!");
-            }
-            else
-            {
-                SetNextPlayer();
-                StartNewRound();
-
-                return true;
+                return DidPlayerWin("Answer was corrent!!!!");
             }
         }
 
@@ -81,6 +45,11 @@
 
             SetNextPlayer();
             StartNewRound();
+        }
+
+        public Player GetCurrentPlayer()
+        {
+            return _players[_currentPlayerIndex];
         }
 
         private void SetNextPlayer()
@@ -96,16 +65,32 @@
             }
         }
 
-        public bool ContinueOnCorrectAnswer()
+        private bool IsPlayerGettingOutOfPenaltyBox()
         {
-            if (GetCurrentPlayer().InPenaltyBox)
+            if (GetCurrentPlayer().IsGettingOutOfPenaltyBox)
             {
-                return IsPlayerGettingOutOfPenaltyBox();
+                return DidPlayerWin("Answer was correct!!!!");
             }
             else
             {
-                return DidPlayerWin("Answer was corrent!!!!");
+                SetNextPlayer();
+                StartNewRound();
+
+                return true;
             }
+        }
+
+        private bool DidPlayerWin(string correctAnswerMessage)
+        {
+            Announcer.CorrectAnswer(correctAnswerMessage);
+            GetCurrentPlayer().AddGoldCoin();
+            Announcer.PlayerGoldCoins(GetCurrentPlayer());
+
+            bool winner = GetCurrentPlayer().DidIWin();
+            SetNextPlayer();
+            StartNewRound();
+
+            return winner;
         }
     }
 }

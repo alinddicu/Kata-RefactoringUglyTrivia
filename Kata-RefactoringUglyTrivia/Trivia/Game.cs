@@ -12,7 +12,7 @@
         private readonly Announcer _announcer;
         private readonly QuestionMaster _questionMaster;
         private readonly GameMaster _gameMaster;
-        private Turn _turn;
+        private PlayerTurn _playerTurn;
 
         public Game(Action<string> writeLine)
         {
@@ -32,8 +32,8 @@
 
         public void roll(int roll)
         {
-            _turn = new Turn(_gameMaster);
-            _turn.Play(roll);
+            _playerTurn = new PlayerTurn(_gameMaster);
+            _playerTurn.Execute(roll);
         }
 
         public bool wasCorrectlyAnswered()
