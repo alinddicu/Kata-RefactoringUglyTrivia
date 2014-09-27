@@ -1,29 +1,30 @@
 ﻿namespace Trivia.Question
 {
-    using System;
-    using System.Linq;
     using System.Collections.Generic;
 
-    public class QuestionStack
+    public class QuestionStack : IQuestionStack
     {
-        private readonly List<Question> _questions = new List<Question>();
+        private readonly Stack<Question> _questionStack = new Stack<Question>();
+        private readonly QuestionCategory _questionCategory;
 
-        public QuestionStack()
+        public QuestionStack(QuestionCategory questionCategory)
         {
-            for (var i = 0; i < 50; i++)
-            {
-                _questions.Add(new Question("Pop Question " + i, QuestionCategory.Pop));
-                _questions.Add(new Question("Science Question " + i, QuestionCategory.Science));
-                _questions.Add(new Question("Sports Question " + i, QuestionCategory.Sports));
-                _questions.Add(new Question("Rock Question " + i, QuestionCategory.Rock));
-            }
+            _questionCategory = questionCategory;
         }
 
-        public Question Pop(QuestionCategory category)
+        public Question Pop()
         {
-            var question = _questions.First(q => q.Category == category);
-            _questions.Remove(question);
-            return (Question)question;
+            return _questionStack.Pop();
+        }
+
+        public void Push(Question question)
+        {
+            _questionStack.Push(question);
+        }
+
+        public bool Supports(QuestionCategory questionCategory)
+        {
+            return _questionCategory == questionCategory;
         }
     }
 }

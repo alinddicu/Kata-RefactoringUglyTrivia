@@ -5,7 +5,7 @@
     public class QuestionManager
     {
         private readonly Announcer _announcer;
-        private readonly QuestionStack _questionStack = new QuestionStack();
+        private readonly QuestionDeck _questionDeck = new QuestionDeck();
         private readonly CategorySelector _categorySelector = new CategorySelector();
 
         public QuestionManager(Announcer gameAnnouncer)
@@ -23,7 +23,7 @@
 
         private void NextQuestion(Player currentPlayer)
         {
-            _announcer.Announce(_questionStack.Pop(GetCurrentCategory(currentPlayer)).ToString());
+            _announcer.PresentQuestion(_questionDeck.Pop(GetCurrentCategory(currentPlayer)));
         }
 
         private QuestionCategory GetCurrentCategory(Player currentPlayer)

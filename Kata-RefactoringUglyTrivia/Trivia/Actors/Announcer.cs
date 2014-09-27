@@ -5,73 +5,78 @@
 
     public class Announcer
     {
+        private readonly Action<string> _announce;
+
         public Announcer(Action<string> announce)
         {
-            Announce = announce;
+            _announce = announce;
         }
 
-        public Action<string> Announce { get; private set; }
+        public void PresentQuestion(Question question)
+        {
+            _announce(question.ToString());
+        }
 
         public void CorrectAnswer(string roundStartMessage)
         {
-            Announce(roundStartMessage);
+            _announce(roundStartMessage);
         }
 
         public void WrongAnswer()
         {
-            Announce("Question was incorrectly answered");
+            _announce("Question was incorrectly answered");
         }
 
         public void PlayerWasAdded(Player player)
         {
-            Announce(player + " was added");
+            _announce(player + " was added");
         }
 
         public void PlayerPosition(int position)
         {
-            Announce("They are player number " + position);
+            _announce("They are player number " + position);
         }
 
         public void CurrentPlayer(Player player)
         {
-            Announce(player + " is the current player");
+            _announce(player + " is the current player");
         }
 
         public void CurrentRoll(int roll)
         {
-            Announce("They have rolled a " + roll);
+            _announce("They have rolled a " + roll);
         }
 
         public void CurrentPlayerGetsOutOfPenaltyBox(Player player, bool getsOut)
         {
             if (getsOut)
             {
-                Announce(player + " is getting out of the penalty box");
+                _announce(player + " is getting out of the penalty box");
             }
             else
             {
-                Announce(player + " is not getting out of the penalty box");
+                _announce(player + " is not getting out of the penalty box");
             }
         }
 
         public void PlayerWasSentToPenaltyBox(Player player)
         {
-            Announce(player + " was sent to the penalty box");
+            _announce(player + " was sent to the penalty box");
         }
 
         public void CurrentPlayerLocation(Player player)
         {
-            Announce(player + "'s new location is " + player.Place);
+            _announce(player + "'s new location is " + player.Place);
         }
 
         public void CurrentCategory(QuestionCategory questionCategory)
         {
-            Announce("The category is " + questionCategory);
+            _announce("The category is " + questionCategory);
         }
 
         public void PlayerGoldCoins(Player player)
         {
-            Announce(player + " now has " + player.GetGoldCoins() + " Gold Coins.");
+            _announce(player + " now has " + player.GetGoldCoins() + " Gold Coins.");
         }
     }
 }

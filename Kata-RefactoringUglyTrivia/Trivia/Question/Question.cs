@@ -1,20 +1,25 @@
 ﻿namespace Trivia.Question
 {
+    using System.Globalization;
+
     public class Question
     {
-        private readonly string _contenu;
+        private const string ContentFormat = "{0} Question {1}";
+        private readonly string _content;
 
-        public Question(string contenu, QuestionCategory category)
+        public Question(string content)
         {
-            _contenu = contenu;
-            Category = category;
+            _content = content;
         }
 
-        public QuestionCategory Category { get; private set; }
+        public Question(QuestionCategory questionCategory, int i)
+        {
+            _content = string.Format(CultureInfo.CurrentCulture, ContentFormat, questionCategory, i);
+        }
 
         public override string ToString()
         {
-            return _contenu;
+            return _content;
         }
     }
 }
