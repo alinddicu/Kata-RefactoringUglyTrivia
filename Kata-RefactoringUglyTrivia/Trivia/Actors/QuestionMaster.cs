@@ -11,18 +11,9 @@
         {
             currentPlayer.MoveForward(roll);
             announcer.CurrentPlayerLocation(currentPlayer);
-            announcer.CurrentCategory(GetCurrentCategory(currentPlayer));
-            NextQuestion(announcer, currentPlayer);
-        }
-
-        private void NextQuestion(Announcer announcer, Player currentPlayer)
-        {
-            announcer.PresentQuestion(_questionDeck.Pop(GetCurrentCategory(currentPlayer)));
-        }
-
-        private QuestionCategory GetCurrentCategory(Player currentPlayer)
-        {
-            return _categorySelector.Select(currentPlayer.Place);
+            var currentCategory = _categorySelector.GetCurrentCategory(currentPlayer);
+            announcer.CurrentCategory(currentCategory);
+            announcer.PresentQuestion(_questionDeck.Pop(currentCategory));
         }
     }
 }

@@ -2,12 +2,13 @@
 {
     using System;
     using System.Collections.Generic;
+    using Trivia.Actors;
 
     public class CategorySelector
     {
-        public QuestionCategory Select(int playerPosition)
+        public QuestionCategory GetCurrentCategory(Player currentPlayer)
         {
-            return (QuestionCategory)(playerPosition % 4);
+            return (QuestionCategory)(currentPlayer.Place % 4);
         }
     }
 }

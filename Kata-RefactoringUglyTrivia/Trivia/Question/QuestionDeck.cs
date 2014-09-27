@@ -14,14 +14,19 @@
 
             foreach (QuestionCategory questionCategory in questionCategories)
             {
-                var questionStack = new QuestionStack(questionCategory);
-                for (var i = 49; i >= 0; i--)
-                {
-                    questionStack.Push(new Question(questionCategory, i));
-                }
-
-                _questionStacks.Add(questionStack);
+                _questionStacks.Add(CreateQuestionStack(questionCategory));
             }
+        }
+
+        private static QuestionStack CreateQuestionStack(QuestionCategory questionCategory)
+        {
+            var questionStack = new QuestionStack(questionCategory);
+            for (var i = 49; i >= 0; i--)
+            {
+                questionStack.Push(new Question(questionCategory, i));
+            }
+
+            return questionStack;
         }
 
         public Question Pop(QuestionCategory category)
